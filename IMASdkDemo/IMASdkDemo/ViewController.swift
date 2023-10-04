@@ -2,11 +2,14 @@ import UIKit
 import AVKit
 import GoogleInteractiveMediaAds
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, IMAAdsLoaderDelegate, IMAAdsManagerDelegate {
     
     var player: AVPlayer?
     var playerLayer: AVPlayerLayer?
     var playerItem: AVPlayerItem?
+    
+    var adsLoader: IMAAdsLoader!
+    var adsManager: IMAAdsManager?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -15,7 +18,8 @@ class ViewController: UIViewController {
         self.view.backgroundColor = .black
         
         // Create the AVPlayerItem with an HLS video stream URL
-        if let url = URL(string: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8") {
+//        if let url = URL(string: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8") {
+        if let url = URL(string: "http://192.168.86.121:8085/index.m3u8") {
             playerItem = AVPlayerItem(url: url)
             
             // Add observer for status and error
@@ -31,8 +35,17 @@ class ViewController: UIViewController {
                 self.view.layer.addSublayer(playerLayer)
             }
             
-            // Play the video
-            player?.play()
+            // Initialize the IMAAdsLoader
+            adsLoader = IMAAdsLoader(settings: nil)
+            adsLoader.delegate = self
+            
+            // Request ads using an ad tag
+            let adDisplayContainer = IMAAdDisplayContainer(adContainer: self.view, viewController: self)
+            let request = IMAAdsRequest(adTagUrl: "https://your_ad_tag_url_here",
+                                        adDisplayContainer: adDisplayContainer,
+                                        contentPlayhead: nil,
+                                        userContext: nil)
+            adsLoader.requestAds(with: request)
         }
     }
     
@@ -48,6 +61,44 @@ class ViewController: UIViewController {
         
         // Set the player layer's frame to the calculated width and height, positioned below the safe area's top anchor
         playerLayer?.frame = CGRect(x: 0, y: safeAreaTop, width: width, height: height)
+    }
+    
+    // MARK: - IMAAdsLoaderDelegate
+    
+    func adsLoader(_ loader: IMAAdsLoader!, adsLoadedWith adsLoadedData: IMAAdsLoadedData!) {
+        // Initialize the ads manager
+        adsManager = adsLoadedData.adsManager
+        adsManager?.delegate = self
+        adsManager?.initialize(with: nil)
+    }
+    
+    func adsLoader(_ loader: IMAAdsLoader!, failedWith adErrorData: IMAAdLoadingErrorData!) {
+        print("Error loading ads: \(adErrorData.adError.message ?? "unknown error")")
+        player?.play()
+    }
+    
+    // MARK: - IMAAdsManagerDelegate
+    
+    func adsManager(_ adsManager: IMAAdsManager!, didReceive event: IMAAdEvent!) {
+        if event.type == IMAAdEventType.LOADED {
+            // Start playing the ads
+            adsManager.start()
+        }
+    }
+    
+    func adsManager(_ adsManager: IMAAdsManager!, didReceive error: IMAAdError!) {
+        print("Ads Manager error: \(error.message ?? "unknown error")")
+        player?.play()
+    }
+    
+    func adsManagerDidRequestContentPause(_ adsManager: IMAAdsManager!) {
+        // Pause the content for the ad
+        player?.pause()
+    }
+    
+    func adsManagerDidRequestContentResume(_ adsManager: IMAAdsManager!) {
+        // Resume the content after the ad
+        player?.play()
     }
     
     // Observe changes to the AVPlayerItem's status and error properties
