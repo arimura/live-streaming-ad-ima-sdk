@@ -1,0 +1,20 @@
+# Uncomment the next line to define a global platform for your project
+# platform :ios, '9.0'
+
+target 'IMASdkDemo' do
+  # Comment the next line if you don't want to use dynamic frameworks
+  use_frameworks!
+
+  # Pods for IMASdkDemo
+
+  target 'IMASdkDemoTests' do
+    inherit! :search_paths
+    # Pods for testing
+    pod 'GoogleAds-IMA-iOS-SDK'
+  end
+
+  target 'IMASdkDemoUITests' do
+    # Pods for testing
+  end
+
+end
