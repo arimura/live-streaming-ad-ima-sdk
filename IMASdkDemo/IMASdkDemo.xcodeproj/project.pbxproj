@@ -16,6 +16,7 @@
 		67F4D6C62ACD3E7700FC029E /* IMASdkDemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F4D6C52ACD3E7700FC029E /* IMASdkDemoTests.swift */; };
 		67F4D6D02ACD3E7700FC029E /* IMASdkDemoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F4D6CF2ACD3E7700FC029E /* IMASdkDemoUITests.swift */; };
 		67F4D6D22ACD3E7700FC029E /* IMASdkDemoUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F4D6D12ACD3E7700FC029E /* IMASdkDemoUITestsLaunchTests.swift */; };
+		67F4D6E02ACD3F2200FC029E /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67F4D6DF2ACD3F2200FC029E /* AVFoundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		67F4D6CB2ACD3E7700FC029E /* IMASdkDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IMASdkDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		67F4D6CF2ACD3E7700FC029E /* IMASdkDemoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMASdkDemoUITests.swift; sourceTree = "<group>"; };
 		67F4D6D12ACD3E7700FC029E /* IMASdkDemoUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMASdkDemoUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		67F4D6DF2ACD3F2200FC029E /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +58,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				67F4D6E02ACD3F2200FC029E /* AVFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,6 +86,7 @@
 				67F4D6C42ACD3E7700FC029E /* IMASdkDemoTests */,
 				67F4D6CE2ACD3E7700FC029E /* IMASdkDemoUITests */,
 				67F4D6AC2ACD3E6F00FC029E /* Products */,
+				67F4D6DE2ACD3F2200FC029E /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -125,6 +129,14 @@
 				67F4D6D12ACD3E7700FC029E /* IMASdkDemoUITestsLaunchTests.swift */,
 			);
 			path = IMASdkDemoUITests;
+			sourceTree = "<group>";
+		};
+		67F4D6DE2ACD3F2200FC029E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				67F4D6DF2ACD3F2200FC029E /* AVFoundation.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
