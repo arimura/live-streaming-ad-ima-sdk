@@ -1,5 +1,6 @@
 import UIKit
 import AVKit
+import GoogleInteractiveMediaAds
 
 class ViewController: UIViewController {
     

@@ -6,11 +6,11 @@ target 'IMASdkDemo' do
   use_frameworks!
 
   # Pods for IMASdkDemo
+  pod 'GoogleAds-IMA-iOS-SDK'
 
   target 'IMASdkDemoTests' do
     inherit! :search_paths
     # Pods for testing
-    pod 'GoogleAds-IMA-iOS-SDK'
   end
 
   target 'IMASdkDemoUITests' do
