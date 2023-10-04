@@ -26,8 +26,6 @@ class ViewController: UIViewController {
             
             // Create the AVPlayerLayer and add it to the view's layer
             playerLayer = AVPlayerLayer(player: player)
-            playerLayer?.frame = self.view.bounds
-            playerLayer?.videoGravity = .resizeAspectFill
             if let playerLayer = playerLayer {
                 self.view.layer.addSublayer(playerLayer)
             }
@@ -39,8 +37,16 @@ class ViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        // Update the player layer's frame when the view's layout changes
-        playerLayer?.frame = self.view.bounds
+        
+        // Calculate the width and height for a 16:9 aspect ratio
+        let width = self.view.bounds.width
+        let height = width * 9 / 16
+        
+        // Get the top of the safe area
+        let safeAreaTop = self.view.safeAreaInsets.top
+        
+        // Set the player layer's frame to the calculated width and height, positioned below the safe area's top anchor
+        playerLayer?.frame = CGRect(x: 0, y: safeAreaTop, width: width, height: height)
     }
     
     // Observe changes to the AVPlayerItem's status and error properties
