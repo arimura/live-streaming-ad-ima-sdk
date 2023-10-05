@@ -38,42 +38,42 @@ class ViewController: UIViewController, IMAAdsLoaderDelegate, IMAAdsManagerDeleg
             // Set up our content playhead and contentComplete callback.
             contentPlayhead = IMAAVPlayerContentPlayhead(avPlayer: player!)
             NotificationCenter.default.addObserver(
-              self,
-              selector: #selector(ViewController.contentDidFinishPlaying(_:)),
-              name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
-              object: player?.currentItem)
+                self,
+                selector: #selector(ViewController.contentDidFinishPlaying(_:)),
+                name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
+                object: player?.currentItem)
             
             // Play the video
-//            player?.play()
+            //            player?.play()
             
             adsLoader.delegate = self
         }
     }
     
     override func viewDidAppear(_ animated: Bool) {
-            requestAds()
+        requestAds()
     }
-
+    
     
     @objc func contentDidFinishPlaying(_ notification: Notification) {
-      // Make sure we don't call contentComplete as a result of an ad completing.
-      if (notification.object as! AVPlayerItem) == player?.currentItem {
-        adsLoader.contentComplete()
-      }
+        // Make sure we don't call contentComplete as a result of an ad completing.
+        if (notification.object as! AVPlayerItem) == player?.currentItem {
+            adsLoader.contentComplete()
+        }
     }
     
     private func requestAds() {
-      // Create ad display container for ad rendering.
-      let adDisplayContainer = IMAAdDisplayContainer(
-        adContainer: self.view, viewController: self, companionSlots: nil)
-      // Create an ad request with our ad tag, display container, and optional user context.
-      let request = IMAAdsRequest(
-        adTagUrl: "https://voyagegroup.github.io/FluctSDK-Hosting/sdk/gsm-vast.xml",
-        adDisplayContainer: adDisplayContainer,
-        contentPlayhead: contentPlayhead,
-        userContext: nil)
-
-      adsLoader.requestAds(with: request)
+        // Create ad display container for ad rendering.
+        let adDisplayContainer = IMAAdDisplayContainer(
+            adContainer: self.view, viewController: self, companionSlots: nil)
+        // Create an ad request with our ad tag, display container, and optional user context.
+        let request = IMAAdsRequest(
+            adTagUrl: "https://voyagegroup.github.io/FluctSDK-Hosting/sdk/gsm-vast.xml",
+            adDisplayContainer: adDisplayContainer,
+            contentPlayhead: contentPlayhead,
+            userContext: nil)
+        
+        adsLoader.requestAds(with: request)
     }
     
     override func viewDidLayoutSubviews() {
@@ -111,50 +111,50 @@ class ViewController: UIViewController, IMAAdsLoaderDelegate, IMAAdsManagerDeleg
     }
     
     // MARK: - IMAAdsLoaderDelegate
-
-     func adsLoader(_ loader: IMAAdsLoader, adsLoadedWith adsLoadedData: IMAAdsLoadedData) {
-       // Grab the instance of the IMAAdsManager and set ourselves as the delegate.
-       adsManager = adsLoadedData.adsManager
-       adsManager?.delegate = self
-
-       // Create ads rendering settings and tell the SDK to use the in-app browser.
-       let adsRenderingSettings = IMAAdsRenderingSettings()
-       adsRenderingSettings.linkOpenerPresentingController = self
-
-       // Initialize the ads manager.
-       adsManager?.initialize(with: adsRenderingSettings)
-     }
-
-     func adsLoader(_ loader: IMAAdsLoader, failedWith adErrorData: IMAAdLoadingErrorData) {
-       print("Error loading ads: \(adErrorData.adError.message ?? "nil")")
-       player?.play()
-     }
-
-     // MARK: - IMAAdsManagerDelegate
-
-     func adsManager(_ adsManager: IMAAdsManager, didReceive event: IMAAdEvent) {
-       if event.type == IMAAdEventType.LOADED {
-         // When the SDK notifies us that ads have been loaded, play them.
-         adsManager.start()
-       }
-     }
-
-     func adsManager(_ adsManager: IMAAdsManager, didReceive error: IMAAdError) {
-       // Something went wrong with the ads manager after ads were loaded. Log the error and play the
-       // content.
-       print("AdsManager error: \(error.message ?? "nil")")
-       player?.play()
-     }
-
-     func adsManagerDidRequestContentPause(_ adsManager: IMAAdsManager) {
-       // The SDK is going to play ads, so pause the content.
-       player?.pause()
-     }
-
-     func adsManagerDidRequestContentResume(_ adsManager: IMAAdsManager) {
-       // The SDK is done playing ads (at least for now), so resume the content.
-       player?.play()
-     }
+    
+    func adsLoader(_ loader: IMAAdsLoader, adsLoadedWith adsLoadedData: IMAAdsLoadedData) {
+        // Grab the instance of the IMAAdsManager and set ourselves as the delegate.
+        adsManager = adsLoadedData.adsManager
+        adsManager?.delegate = self
+        
+        // Create ads rendering settings and tell the SDK to use the in-app browser.
+        let adsRenderingSettings = IMAAdsRenderingSettings()
+        adsRenderingSettings.linkOpenerPresentingController = self
+        
+        // Initialize the ads manager.
+        adsManager?.initialize(with: adsRenderingSettings)
+    }
+    
+    func adsLoader(_ loader: IMAAdsLoader, failedWith adErrorData: IMAAdLoadingErrorData) {
+        print("Error loading ads: \(adErrorData.adError.message ?? "nil")")
+        player?.play()
+    }
+    
+    // MARK: - IMAAdsManagerDelegate
+    
+    func adsManager(_ adsManager: IMAAdsManager, didReceive event: IMAAdEvent) {
+        if event.type == IMAAdEventType.LOADED {
+            // When the SDK notifies us that ads have been loaded, play them.
+            adsManager.start()
+        }
+    }
+    
+    func adsManager(_ adsManager: IMAAdsManager, didReceive error: IMAAdError) {
+        // Something went wrong with the ads manager after ads were loaded. Log the error and play the
+        // content.
+        print("AdsManager error: \(error.message ?? "nil")")
+        player?.play()
+    }
+    
+    func adsManagerDidRequestContentPause(_ adsManager: IMAAdsManager) {
+        // The SDK is going to play ads, so pause the content.
+        player?.pause()
+    }
+    
+    func adsManagerDidRequestContentResume(_ adsManager: IMAAdsManager) {
+        // The SDK is done playing ads (at least for now), so resume the content.
+        player?.play()
+    }
     
     // Remove observers when the view controller is deinitialized
     deinit {
