@@ -11,12 +11,17 @@ class ViewController: UIViewController, IMAAdsLoaderDelegate, IMAAdsManagerDeleg
     private var contentPlayhead: IMAAVPlayerContentPlayhead?
     private let adsLoader = IMAAdsLoader(settings: nil)
     private var adsManager: IMAAdsManager?
-    
+   
+    var upperHalfView: UIView!
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        upperHalfView = UIView()
+        self.view.addSubview(upperHalfView)
+        
         // Set the background color
-        self.view.backgroundColor = .black
+        self.view.backgroundColor = .white
         
         // Create the AVPlayerItem with an HLS video stream URL
         if let url = URL(string: "http://192.168.86.121:8085/index.m3u8") {
@@ -32,7 +37,7 @@ class ViewController: UIViewController, IMAAdsLoaderDelegate, IMAAdsManagerDeleg
             // Create the AVPlayerLayer and add it to the view's layer
             playerLayer = AVPlayerLayer(player: player)
             if let playerLayer = playerLayer {
-                self.view.layer.addSublayer(playerLayer)
+                self.upperHalfView.layer.addSublayer(playerLayer)
             }
             
             // Set up our content playhead and contentComplete callback.
@@ -65,7 +70,7 @@ class ViewController: UIViewController, IMAAdsLoaderDelegate, IMAAdsManagerDeleg
     private func requestAds() {
         // Create ad display container for ad rendering.
         let adDisplayContainer = IMAAdDisplayContainer(
-            adContainer: self.view, viewController: self, companionSlots: nil)
+            adContainer: self.upperHalfView, viewController: self, companionSlots: nil)
         // Create an ad request with our ad tag, display container, and optional user context.
         let request = IMAAdsRequest(
             adTagUrl: "https://voyagegroup.github.io/FluctSDK-Hosting/sdk/gsm-vast.xml",
@@ -79,15 +84,23 @@ class ViewController: UIViewController, IMAAdsLoaderDelegate, IMAAdsManagerDeleg
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        // Calculate the width and height for a 16:9 aspect ratio
+        // Set the frame of the new view to occupy the upper half of the screen
         let width = self.view.bounds.width
-        let height = width * 9 / 16
+        let height = self.view.bounds.height / 2
+        upperHalfView.frame = CGRect(x: 0, y: 0, width: width, height: height)
         
-        // Get the top of the safe area
-        let safeAreaTop = self.view.safeAreaInsets.top
+        // Adjust the player layer's frame to fit within the new view
+        playerLayer?.frame = upperHalfView.bounds
         
-        // Set the player layer's frame to the calculated width and height, positioned below the safe area's top anchor
-        playerLayer?.frame = CGRect(x: 0, y: safeAreaTop, width: width, height: height)
+        // Calculate the width and height for a 16:9 aspect ratio
+//        let width = self.view.bounds.width
+//        let height = width * 9 / 16
+//
+//        // Get the top of the safe area
+//        let safeAreaTop = self.view.safeAreaInsets.top
+//
+//        // Set the player layer's frame to the calculated width and height, positioned below the safe area's top anchor
+//        playerLayer?.frame = CGRect(x: 0, y: safeAreaTop, width: width, height: height)
     }
     
     // Observe changes to the AVPlayerItem's status and error properties
